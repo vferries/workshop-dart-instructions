@@ -1,0 +1,136 @@
+	@font-face {
+	  font-family: 'Montserrat';
+	  font-style: normal;
+	  font-weight: 400;
+	  src: url(../fonts/montserrat400.woff) format('woff');
+	}
+	@font-face {
+	  font-family: 'Montserrat';
+	  font-style: normal;
+	  font-weight: 700;
+	  src: url(../fonts/montserrat700.woff) format('woff');
+	}
+	@font-face {
+	  font-family: 'Roboto';
+	  font-style: normal;
+	  font-weight: 300;
+	  src: url(../fonts/roboto300.woff) format('woff');
+	}
+	@font-face {
+	  font-family: 'Roboto';
+	  font-style: normal;
+	  font-weight: 400;
+	  src: url(../fonts/roboto400.woff) format('woff');
+	}
+
+	body {
+		font-family: 'Roboto',sans-serif;
+		font-size: 14px;
+		line-height: 1.42857;
+		color: #484848;
+		background-color: #fff;
+		margin: 0px;
+		max-width: 1170px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	h1 {
+		font: 400 46px/52px 'Montserrat',sans-serif;
+		margin-top: 20px;
+		margin-bottom: 10px;
+	}
+
+	h2 {
+		font: 400 32px/40px 'Montserrat',sans-serif;
+		margin-top: 20px;
+		margin-bottom: 10px;
+	}
+
+	h3 {
+		font: 400 17px/24px 'Montserrat',sans-serif;
+		margin-top: 20px;
+		margin-bottom: 10px;
+	}
+
+	p {
+		font: 400 15px/19px 'Roboto', sans-serif;
+		color: #484848;
+		margin: 0px 0px 10px;
+	}
+
+	a {
+		text-decoration: none;
+		color: #428BCA;
+	}
+
+	ul {
+		margin-top: 0px;
+		margin-bottom: 10px;
+	}
+
+	code {
+		padding: 0px;
+		font-size: 90%;
+		color: #0084C5;
+		white-space: nowrap;
+		border-radius: 4px;
+		background-color: #F9F2F4;
+		font-family: Monaco,Menlo,Consolas,"Courrier New",monospace;
+	}
+
+	.finished-app {
+		height: 1000px;
+		width: 100%;
+		border-style: solid;
+		border-width: 1px;
+		border-radius: 10px;
+		padding: 5px;
+	}
+
+	.map {
+		background-image: url('../images/map.jpg');
+		background-repeat: no-repeat;
+		background-position: right center;
+		background-size: 640px 408px;
+		min-height: 420px;
+	}
+
+	.col6 {
+		float: left;
+		width: 50%;
+	}
+
+	.row {
+		margin-top: 0px;
+		margin-bottom: 10px;
+	}
+
+	.row:after {
+		clear: both;
+		display: table;
+		content: " ";
+	}
+
+	.note {
+		background-color: #FFFACD;
+		padding: 10px;
+		margin-bottom: 10px;
+		border-radius: 3px;
+		border: 1px solid #DAA520;
+	}
+
+	pre.prettyprint {
+		border: 1px solid #E8E8E8;
+		border-radius: 0px;
+		background-color: #F8F8F8;
+		margin-bottom: 20px;
+	}
+
+	.filename {
+		text-align: right;
+		color: #C0C0C0;
+		margin-top: -45px;
+		margin-bottom: 10px;
+		margin-right: 5px;
+	}

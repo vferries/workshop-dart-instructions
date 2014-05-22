@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Game of Thrones : build your webapp</title>
+		<link rel="stylesheet" type="text/css" href="styles/style.css">
+		<link href="prettify/prettify.css" type="text/css" rel="stylesheet" />
+		<script src="prettify/prettify.js" defer="defer"></script>
+		<script src="prettify/lang-dart.js" defer="defer"></script>
+		<script src="prettify/lang-yaml.js" defer="defer"></script>
+	</head>
+	<body onload="prettyPrint()">
+		<h1>EclipseCon Dart Workshop</h1>
+		<p>In this lab, you will build a web application from scratch. Some samples will be given to you. Some programming skills are necessary, but you don't need to know anything about Dart first. During all the lab, don't hesitate to ask questions or help if you are stuck.</p>
+
+		<p>Here is what you should get in the end !</p>
+<!--
+		<iframe src="http://you-know-nothing.com/" class="finished-app"></iframe>
+-->
+		<div class="map">
+			<h2>Winter is coming...</h2>
+			<ul>
+				<li><a href="#step0">Step 0: Set up</a></li>
+				<li><a href="#step1">Step 1: Your first command-line application</a></li>
+				<li><a href="#step2">Step 2: Your first Dart HTTP server</a></li>
+				<li><a href="#step3">Step 3: Serving JSON content</a></li>
+			</ul>
+		</div>
+
+		<h2 id="step0">Step 0: Set up</h2>
+		<p>In this step, you will install, both Dart Editor, the SDK and everytools needed.</p>
+		
+		<h3>Prerequisite : JDK</h3>
+		<p>Dart Editor requires Java version 6 or higher. Please, fill free to use theses provided on the USB keys if you don't allready have it installed.<br>Use a version compatible with your Operating System (32 or 64 bits). If you still have problems, go to <a href="https://www.dartlang.org/tools/editor/troubleshoot.html">this troubleshoot guide</a> or simply ask for help.</p>
+		
+		<h3>Get Dart</h3>
+		<p>Just copy the folder corresponding to your Operating System somewhere on your hard drive. Please, use a version (32/64 bits) matching the version of your installed JDK.</p>
+		
+		<h3>Start the editor</h3>
+		<p>Go to the dart directory and double-click DartEditor.</p>
+
+		<h2 id="step1">Step 1: Your first command-line application</h2>
+		<p>Now that your Dart Editor is up and running, we will test his basic functionalities.</p>
+		
+		<h3>Create a new command-line project</h3>
+		<p>In the top menu, go to <strong>File -> New Project...</strong><br>
+		Name it as you want : got-server will be a good one<br>
+		Check "Generate sample content"<br>
+		Choose <strong>"Command-line application"</strong> from the list</p>
+		<h3>Have a look at the different folders</h3>
+		<div class="row">
+			<div class="col6">
+				<p>You should get a project structure similar to the following one :</p>
+				<img src="images/step1.png">
+			</div>
+			<div class="col6">
+				<p><strong>Side notes</strong></p>
+				<ul>
+					<li><p>The <code>packages</code> directory will contain all the dependencies we use in the project. We currently have none, we will get to it quite soon. The <code>pubspec.lock</code> file is simply a list of the allready downloaded packages. Dart Editor should handle these for you.</p></li>
+					<li><p>The <code>pubspec.yaml</code> file describes our project and its dependencies.</p></li>
+					<li><p>The <code>bin</code> folder will contain our Dart source files. There should only be one for now.</p></li>
+				</ul>
+			</div>
+		</div>
+		
+		<div class="note">
+			<strong>Note:</strong>If you have some red X's, I bet it's a connection problem. Please, copy the repository found on the USB keys and directly link to it for each of your dependencies in your <code>pubspec.yaml</code> file: 
+			<pre class="prettyprint lang-yaml" filename="test">
+dependencies:
+	my_dependency:
+		path: /path/to/the/folder/my_dependency
+			</pre>
+			<div class="filename">pubspec.yaml</div>
+		</div>
+
+		<h3>Choose the String that will be printed</h3>
+		<p>Simply choose what will be printed. Don't be affraid and try String interpolation while generating your message.</p>
+
+		<h3>Execute your application</h3>
+		<p>Right click on your dart file and select Run. You can also use the Ctrl + R shortcut.</p>
+		<p>Is your message printed on the console?</p>
+		
+		<h2 id="step2">Step 2: Your first Dart HTTP server</h2>
+		<h2 id="step3">Step 3: Serving JSON content</h2>
+	</body>
+</html>
