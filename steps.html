@@ -11,7 +11,7 @@
 	</head>
 	<body onload="prettyPrint()">
 		<h1>EclipseCon Dart Workshop</h1>
-		<p>In this lab, you will build a web application from scratch. Some samples will be given to you. Some programming skills are necessary, but you don't need to know anything about Dart first. During all the lab, don't hesitate to ask questions or help if you are stuck.</p>
+		<p>In this lab, you will build a web application from scratch : both the server and client sides. Some samples will be given to you, but these are just base data and boilerplate, everything will be built from scratch. Some programming skills are necessary, but you don't need to know anything about Dart first. During all the lab, don't hesitate to ask questions or for help if you are stuck.</p>
 
 		<p>Here is what you should get in the end !</p>
 <!--
@@ -23,7 +23,8 @@
 				<li><a href="#step0">Step 0: Set up</a></li>
 				<li><a href="#step1">Step 1: Your first command-line application</a></li>
 				<li><a href="#step2">Step 2: Your first Dart HTTP server</a></li>
-				<li><a href="#step3">Step 3: Serving JSON content</a></li>
+				<li><a href="#step3">Step 3: Serving real content</a></li>
+				<li><a href="#step4">Step 4: Our first web page</a></li>
 			</ul>
 		</div>
 
@@ -81,6 +82,62 @@ dependencies:
 		<p>Is your message printed on the console?</p>
 		
 		<h2 id="step2">Step 2: Your first Dart HTTP server</h2>
-		<h2 id="step3">Step 3: Serving JSON content</h2>
+		<p>Ok, we have something that runs on our computer, but we are supposed to build a web application. Where is my server?</p>
+		<h3>Code a webserver</h3>
+		<p>Don't worry, it's quite easy. We will use the <strong>HttpServer</strong> class found in the <code>dart:io</code> package.</p>
+<pre class="prettyprint lang-dart">
+<code class="nocode note">1</code> <code class="nocode highlight">import 'dart:io';</code>
+
+main() {
+<code class="nocode note">2</code>  HttpServer.bind('localhost', 8080).then((HttpServer server) {
+<code class="nocode note">3</code>    print('Server started on port ${server.port}');
+<code class="nocode note">4</code>    server.listen((HttpRequest request) {
+          request.response..write('Hello EclipseCon!');
+          	                ..close();
+    });
+  });
+}
+</pre>
+<div class="filename">got_server.dart</div>
+		<p><span class="code-note">1</span> We must import the <code>dart:io</code> package in order to use the HttpServer class and everything related to inputs/outputs.</p>
+		<p><span class="code-note">2</span> We bind our webserver to the localhost address (IP 127.0.0.1, or 0.0.0.0) on port 8080.<br>
+		This bind method returns a Future. As we have seen, we can call the <code>then</code> method on this future with a function that will be executed once the Future completes.</p>
+		<p><span class="code-note">3</span> We simply print that our server successfully started.</p>
+		<p><span class="code-note">4</span> We register a method to execute on incoming requests.</p>
+		<h3>Execute and test it</h3>
+		<p>Run your dart file again, it should print that your webserver started.</p>
+		<p>If it's the case simply head to <a href="http://localhost:8080">http://localhost:8080</a> with your favorite web browser.</p>
+		<p>It should print your message, isn't it?</p>
+
+		<h2 id="step3">Step 3: Serving real content</h2>
+		<p>Fine, we are able to print a String from our webserver and see it in our web browser. We will now serve usefull data instead of a simple message. In our case, a JSON (Javascript Serialization Object Notation).</p>
+		<h3>Source file</h3>
+		<p>Start by copying the file <code>characters.json</code> in the <code>bin</code> folder of your project.</p>
+		<h3>Reading our file</h3>
+		<p>We will simply put the file content in our response for now. We will improve this part much later.</p>
+<pre class="prettyprint lang-dart">
+import 'dart:io';
+
+main() {
+  File jsonFile = new File("characters.json");
+  String fileContent = jsonFile.readAsStringSync();
+  ...
+        request.response..write(fileContent);
+                        ..close();
+  ...
+}
+</pre>
+<div class="filename">got_server.dart</div>
+		
+		<div class="note">
+			<strong>Note:</strong> Here we use the <code>readAsStringSync()</code> method which is a synchronous method to be sure the file has been completely read before starting the webserver. Another way to do would have been to use the <code>readAsString()</code> method which returns a Future and process with the server launch in the handler method.
+		</div>
+
+		<h3>Rince, repeat...</h3>
+		<p>Simply stop and run your webserver again, you should be used to it as it's the third time.</p>
+		<p>Check in your web browser that the file content is printed.</p>
+
+		<h2 id="step0">Step 4: Our first web page</h2>
+
 	</body>
 </html>
