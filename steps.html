@@ -18,13 +18,16 @@
 		<iframe src="http://you-know-nothing.com/" class="finished-app"></iframe>
 -->
 		<div class="map">
-			<h2>Winter is coming...</h2>
+			<h2>Dart is coming...</h2>
 			<ul>
 				<li><a href="#step0">Step 0: Set up</a></li>
 				<li><a href="#step1">Step 1: Your first command-line application</a></li>
 				<li><a href="#step2">Step 2: Your first Dart HTTP server</a></li>
 				<li><a href="#step3">Step 3: Serving real content</a></li>
-				<li><a href="#step4">Step 4: Our first web page</a></li>
+				<li><a href="#step4">Step 4: Our first web page with web components</a></li>
+				<li><a href="#step5">Step 5: Your own component</a></li>
+				<li><a href="#step6">Step 6: If you think this has a happy ending, you haven't been paying attention</a></li>
+				<li><a href="#step7">Step 7: You know nothing</a></li>
 			</ul>
 		</div>
 
@@ -32,7 +35,7 @@
 		<p>In this step, you will install, both Dart Editor, the SDK and everytools needed.</p>
 		
 		<h3>Prerequisite : JDK</h3>
-		<p>Dart Editor requires Java version 6 or higher. Please, fill free to use theses provided on the USB keys if you don't allready have it installed.<br>Use a version compatible with your Operating System (32 or 64 bits). If you still have problems, go to <a href="https://www.dartlang.org/tools/editor/troubleshoot.html">this troubleshoot guide</a> or simply ask for help.</p>
+		<p>Dart Editor requires Java version 6 or higher. Please, fill free to use theses provided on the USB keys if you don't already have it installed.<br>Use a version compatible with your Operating System (32 or 64 bits). If you still have problems, go to <a href="https://www.dartlang.org/tools/editor/troubleshoot.html">this troubleshoot guide</a> or simply ask for help.</p>
 		
 		<h3>Get Dart</h3>
 		<p>Just copy the folder corresponding to your Operating System somewhere on your hard drive. Please, use a version (32/64 bits) matching the version of your installed JDK.</p>
@@ -57,7 +60,7 @@
 			<div class="col6">
 				<p><strong>Side notes</strong></p>
 				<ul>
-					<li><p>The <code>packages</code> directory will contain all the dependencies we use in the project. We currently have none, we will get to it quite soon. The <code>pubspec.lock</code> file is simply a list of the allready downloaded packages. Dart Editor should handle these for you.</p></li>
+					<li><p>The <code>packages</code> directory will contain all the dependencies we use in the project. We currently have none, we will get to it quite soon. The <code>pubspec.lock</code> file is simply a list of the already downloaded packages. Dart Editor should handle these for you.</p></li>
 					<li><p>The <code>pubspec.yaml</code> file describes our project and its dependencies.</p></li>
 					<li><p>The <code>bin</code> folder will contain our Dart source files. There should only be one for now.</p></li>
 				</ul>
@@ -137,7 +140,275 @@ main() {
 		<p>Simply stop and run your webserver again, you should be used to it as it's the third time.</p>
 		<p>Check in your web browser that the file content is printed.</p>
 
-		<h2 id="step0">Step 4: Our first web page</h2>
+		<h2 id="step0">Step 4: Our first web page with web components</h2>
+		<h3>Create a new wep application</h3>
+		<div class="row">
+			<div class="col6">
+				<img src="images/newwebapppolymer.png">
+			</div>
+			<div class="col6">
+				<p><strong>Side notes</strong></p>
+				<ul>
+					<li><p>Use the menu : File -> New Project...<br>This time, choose "Web application (using Polymer library)" as shown on the image.</p></li>
+					<li><p>Notice that this time, in our <code>pubspec.yaml</code> file, a polymer dependency has been added for us.</p></li>
+					<li><p>The project now have a <code>web</code> folder that contains html, css and dart files. This one will be exposed when running.</p></li>
+					<li><p>A <code>build.dart</code> file is present at the root of the project and is related to the Dart Editor. It describes how to build our project. It isn't part of this workshop scope.</p></li>
+				</ul>
+			</div>
+		</div>
+		<h3>Get a closer look at the html and dart files</h3>
+<pre class="prettyprint lang-html">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Sample app&lt;/title&gt;
+    &lt;link rel="stylesheet" href="got_client.css"&gt;
+<code class="nocode note">1</code> &lt;link rel="import" href="clickcounter.html"&gt;
+<code class="nocode note">2</code> &lt;script type="application/dart"&gt;export 'package:polymer/init.dart';&lt;/script&gt;
+<code class="nocode note">3</code> &lt;script src="packages/browser/dart.js"&gt;&lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Got&gt;client&lt;/h1&gt;
+    &lt;p&gt;Hello world from Dart!&lt;/p&gt;
+    &lt;div id="sample_container_id"&gt;
+<code class="nocode note">4</code>   &lt;click-counter count="5"&gt;&lt;/click-counter&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+<div class="filename">got_client.html</div>
+		<p><span class="code-note">1</span> This is an Html import. A webcomponent is described in this page (containing his own style etc) and we need to import it if we want to use it.</p>
+		<p><span class="code-note">2</span> Here, we initialize Polymer Dart. We simply expose (and automatically call) the <code>main</code> method contained in the <code>init.dart</code> file in the polymer package. This will bootstrap Polymer and make it usable. You can Ctrl + clic it if you're curious.</p>
+		<p><span class="code-note">3</span> This line allows our application to work even if there aren't any Dart VM in our web browser. The code will be compiled in JavaScript if it's the case. Beware, it's slower than generating the application as Javascript first with dart2js.</p>
+		<p><span class="code-note">4</span> Here, we call the webcomponent called <code>click-counter</code>, initializing it's count attribute to 5.</p>
+<br>
+<pre class="prettyprint lang-html">
+<code class="nocode note">1</code> &lt;polymer-element name="click-counter" attributes="count"&gt;
+<code class="nocode note">2</code>   &lt;template&gt;
+<code class="nocode note">3</code>    &lt;style&gt;
+         div {
+           font-size: 24pt;
+           text-align: center;
+           margin-top: 140px;
+         }
+         button {
+           font-size: 24pt;
+           margin-bottom: 20px;
+         }
+       &lt;/style&gt;
+       &lt;div&gt;
+<code class="nocode note">4</code>      &lt;button on-click="{{increment}}"&gt;Click me&lt;/button&gt;&lt;br&gt;
+<code class="nocode note">5</code>      &lt;span&gt;(click count: {{count}})&lt;/span&gt;
+       &lt;/div&gt;
+     &lt;/template&gt;
+<code class="nocode note">6</code>  &lt;script type="application/dart" src="clickcounter.dart"&gt;&lt;/script&gt;
+    &lt;/polymer-element&gt;
+</pre>
+<div class="filename">clickcounter.html</div>
+		<p><span class="code-note">1</span> We define a new <strong>Polymer element</strong> here. We give it the name <code>click-counter</code> and list his attributes (only <code>count</code> here).</p>
+		<p><span class="code-note">2</span> Here, we declare a new template. </p>
+		<div class="note">
+			<strong>Note:</strong> Beware, you can't use conditionals or loops in the root template element (no if or repeat attribute of the template markup).
+		</div>
+		<p><span class="code-note">3</span> We can define style which stays intern to the component (the rules defined here will not affect parent html). It can also be done using a </p>
+		<pre class="prettyprint lang-html">&lt;link rel="stylesheet" type="text/css" href="your_style.css"&gt;</pre>
+		<p><span class="code-note">4</span> We bind the increment method of the component to the click listener.</p>
+		<p><span class="code-note">5</span> We bind the count attribute to the view. If it's value change in the model, the view will automagically be refreshed.</p>
+		<p><span class="code-note">6</span> We attach a Dart script to this component. We will see what's done inside it.</p>
+<br>
+<pre class="prettyprint lang-dart">
+<code class="nocode note">1</code> import 'package:polymer/polymer.dart';
+
+<code class="nocode note">2</code> @CustomTag('click-counter')
+<code class="nocode note">3</code> class ClickCounter extends PolymerElement {
+<code class="nocode note">4</code>   @published int count = 0;
+
+<code class="nocode note">5</code>   ClickCounter.created() : super.created() {}
+
+      void increment() {
+        count++;
+      }
+    }
+</pre>
+<div class="filename">clickcounter.dart</div>
+		<p><span class="code-note">1</span> We will use classes from Polymer library and need to import this package.</p>
+		<p><span class="code-note">2</span> The <code>@CustomTag</code> annotation allows us to declare a Polymer element and bind it to a component name.</p>
+		<p><span class="code-note">3</span> We must extend the PolymerElement class to inherit his behaviour.</p>
+		<p><span class="code-note">4</span> We use the <code>@published</code> annotation to mark the <code>count</code> attribute exposed as a property for our custom element.</p>
+		<p><span class="code-note">5</span> We have to declare a constructor for our class. Here, we simply call the one from PolymerElement, the parent class.</p>
+
+		<h3>Test the sample application</h3>
+		<div class="row">
+			<div class="col6">
+				<p>There are two options : </p>
+				<img src="images/run_as.png">
+			</div>
+			<div class="col6">
+				<p><strong>Your options</strong></p>
+				<ul>
+					<li><p>You could run it as JavaScript. In such a case, dart2js will be called and process your pages, producing obfuscated and minified JavaScript code. It's not our best option here because the page would not be automatically refreshed if we make some changes. This option is good only if you want to test the final result as JavaScript (because no current browser contains a Dart Virtual Machine).</p></li>
+					<li><p>You can also run it in Dartium as Dart code. It's faster and you juste need to refresh your pages to see the changes made to your pages or script (juste like when you code in JavaScript).</p></li>
+				</ul>
+			</div>
+		</div>
+		
+		<div class="note">
+			<strong>Note:</strong>If you're waiting for the other ones, try to play with the concepts we have seen so far : change the counter initial value, make it incremented by 2 instead of one for each click, add another attribute that you increment on hover...
+		</div>
+
+		<h2 id="step5">Step 5: Your own component</h2>
+		<p>Now that we have a web application, we will display our list of Game of Thrones characters from the JSON file returned by our server.</p>
+
+		<h3>Create a new Web Component</h3>
+		<p>Just create a new polymer-element called "got-characters", with both a <code>characters.html</code> and <code>characters.dart</code> file. Call it from your main page instead of the click-counter one.</p>
+		<p>Make it simply display "Dart is coming"</p>
+		<p>In your Dart file, you should annotate your class with the <code>@CustomTag</code> annotation, extend PolymerElement and create a constructor without any parameter calling the parent one. You can find a good example in the click-counter component.</p>
+
+		<h3>Representing a Game of Thrones character</h3>
+		<p>In the same <code>characters.dart</code> file, create a new class called Character.</p>
+		<p>Here is a syntax example : </p>
+<pre class="prettyprint lang-dart">
+...
+
+class MyClass {
+	String myAttribute;
+
+	Myclass(this.myAttribute);
+}
+</pre>
+<div class="filename">characters.dart</div>
+		<p>Notice the syntaxic sugar in the constructor : the myAttribute is affected the value of the parameter.</p>
+		<p>Our Character class will have the same attributes as our JSON file : a name (String), an actor (String), a bio (String), an img (String), a gender (String) and a list of houses (List&lt;String&gt;)</p>
+		<p>Add a constructor with all these attributes values as parameters.</p>
+
+		<h3>Iterating over characters</h3>
+		<p>Add an observable characters attribute in your dart file. Name it <code>characters</code>. It will contain a list of characters. Initialize it with at least two characters you create. Fill the list in your constructor.</p>
+<pre class="prettyprint lang-dart">
+@CustomTag('got-characters')
+class Characters extends PolymerElement {
+  @observable List<Character> characters = [];
+
+  Characters.created() : super.created() {
+  	// Your list initialization here
+  	// you can use List.add method
+  }
+}
+</pre>
+<div class="filename">characters.dart</div>
+		<p>First of all, replace your css (style) block by the following inclusion. I prepared some basic styles for you just <a href="">HERE</a>. Copy it in the folder you are working on.</p>
+		<p>Beware, the script markup must be INSIDE the template one. Everything outside the template markup in a webcomponent will simply be discarded. You cannot use if or repeat on the parent template markup in your web component.</p>
+<pre class="prettyprint lang-html">
+&lt;link rel="stylesheet" href="characters.css"&gt;
+</pre>
+<div class="filename">characters.html</div>
+
+		<p>We will then iterate over them in our template.</p>
+		<p>We will display every character in a HTML list. In order to do that, we will place a &lt;ul&gt; in our HTML file and use a template repeat to display every character in a new &lt;li&gt; element :</p>
+<pre class="prettyprint lang-html">
+...
+    &lt;ul&gt;
+      &lt;template repeat="{{REPEAT ON CHARACTERS}}"&gt;
+        &lt;li&gt;
+          &lt;img src="images/{{LINK TO THE IMAGE ATTRIBUTE}}"&gt;
+          &lt;h2&gt;{{LINK TO THE NAME}}&lt;/h2&gt;
+        &lt;/li&gt;
+      &lt;/template&gt;
+    &lt;/ul&gt;
+...
+</pre>
+<div class="filename">characters.html</div>
+
+		<h3>JSON manipulation</h3>
+		<p>Add a <code>fromJSON</code> constructor in your Character class. It should take a map as parameter and initialize every attribute.</p>
+		<p>Get the real JSON from server: in our constructor, we will replace the characters list initialization with a call to the <code>getString(url)</code> method from the <code>HttpRequest</code> class.</p>
+		<p>This method returns a Future. As we have already seen, we will use the <code>then</code> method to proceed our results once the <code>getString</code> call completes.</p>
+		<p>To process our JSON, we will import the convertion libraries from Dart. They are located in the <code>dart:convert</code> package.</p>
+		<p>We will convert our JSON String in exploitable data using the <code>JSON.decode(string)</code> method.</p>
+		<p>This method produces an Iterable. We want to convert each of our JSON element to a new Character. We can simply use the <code>map</code> method to do that.</p>
+		<p>Unfortunately, the map method returns an iterable in this case, and we would like to have a list. Just use <code>toList()</code>.</p>
+<pre class="prettyprint lang-dart">
+import 'dart:convert';
+
+...
+
+    HttpRequest.getString("http://localhost:8080").then((json) {
+      this.characters = JSON.decode(json).map((ch) => new Character.fromJSON(ch)).toList();
+    });
+</pre>
+<div class="filename">characters.dart</div>
+
+		<p>Check that everything works and that the list of characters is correctly displayed.</p>
+
+		<h3>The detail</h3>
+		<p>We want to display additional informations when we click on a given character of our list.</p>
+		<p>In order to do that, we will register a listener on the click event on our <code>li</code> elements. The <code>data-id</code> attribute will be used to carry on specific informations (the id of the character). We will use a <code>selected</code> attribute which will contain the current selected character and associate the "active" class if our item is the currently selected one.</p>
+
+<pre class="prettyprint lang-html">
+...
+&lt;li on-click="{{characterSelect}}" data-id="{{character.id}}" class="{{ {'active': selected != null && selected.id == character.id} }}"&gt;
+...
+</pre>
+<div class="filename">characters.html</div>
+
+		<p>In our Dart file, we will need to define our <code>characterSelect</code> method. As any method call when en event occurs, it must have the following signature:</p>
+<pre class="prettyprint lang-dart">
+void yourMethod(Event e, var detail, Element target)
+</pre>
+		<p>We can get the content of a data attribute (data-id in our case) with the following syntax :
+<pre class="prettyprint lang-dart">
+int dataId = int.parse(target.dataset["id"]);
+</pre>
+		<p>You can now use a <code>selected</code> attribute to memorize the selected character (recovering it from the list with its id, you can use the singleWhere method on lists).</p>
+		<p>Only affect the new selected character if no one was previously selected or if the selected one differs from the current one.</p>
+
+		<p>In your component web page, you can now display the detail when a character is selected.</p>
+		<p>Inside our <code>ul</code> element :</p>
+
+<pre class="prettyprint lang-html">
+&lt;template ONLY DISPLAYED WHEN NEEDED"&gt;
+&lt;div id="detail" class="{{hack}}" style="{{ {'top': selected.id|row} }}"&gt;
+  &lt;dl&gt;
+    &lt;dt&gt;Gender:&lt;/dt&gt;
+      &lt;dd&gt;{{GET THE GOOD ONE}}&lt;/dd&gt;
+    &lt;dt&gt;Actor name:&lt;/dt&gt;
+      &lt;dd&gt;{{GET THE GOOD ONE}}&lt;/dd&gt;
+    &lt;dt&gt;Biography:&lt;/dt&gt;
+      &lt;dd&gt;{{GET THE GOOD ONE}}&lt;/dd&gt;
+  &lt;/dl&gt;
+  &lt;template repeat="{{MANY HOUSES}}"&gt;
+    &lt;span class="{{TO REPLACE}}" title="{{TO REPLACE}}"&gt;&lt;/span&gt;
+  &lt;/template&gt;
+&lt;/div&gt;
+&lt;/template&gt;
+</pre>
+		<p>Hacks :</p>
+		<ul>
+			<li>We use a <code>hack</code> attribute in our dart file to switch from class ".detail1" to ".detail2" each time a new character is selected. This will trigger an animation on the detail part. Add the corresponding code in your dart file (both in the characterSelect method and as an attribute).</li>
+			<li>The style part seems odd. It's because we will use hacky absolute positionning for the detail block. We want it to take 100% width just below the selected character.</li>
+			<li>Notice the pipe in this code, it will call the method on the right with the part on the left as a parameter. I give you the content of this method because it is weird : we calculate the position of the detail block given the fact that each line is 283px height and calculating the row in which the selected character is.</li>
+		</ul>
+<pre class="prettyprint lang-dart">
+...
+  String row(int charId) {
+    return (((characters.indexOf(characters.firstWhere((e) => e.id == charId)) / 4).floor() + 1) * 283).toString() + 'px';
+  }
+...
+</pre>
+
+		<h2 id="step6">Step 6: If you think this has a happy ending, you haven't been paying attention</h2>
+		<p>It's up to you now. Add some filters to the top of the page.</p>
+		<p>Here is the list of used houses:</p>
+<pre class="prettyprint lang-dart">
+["all", "arryn", "baratheon", "brotherhood", "council", "freefolk", "greyjoy", "lannister", "nightswatch", "stark", "targaryen", "tully", "tyrell", "other"];
+</pre>
+		<p>You can filter the characters client-side (easiest solution), or server-side, make your choice.</p>
+		<p>Add some ordering too : alphabetically, in reverse order, random.</p>
+
+		<h2 id="step7">Step 7: You know nothing</h2>
+		<p>Misc. additions : Angular, content markup with filters (select)...</p>
+		<p>Existing libraries in pub, existing html components in pub or threw JS.</p>
 
 	</body>
 </html>
