@@ -159,7 +159,10 @@ main() {
 		</div>
 
 		<div class="note">
-			<strong>Note:</strong>If you have some red X's, I bet it's a connection problem. Please, copy both the <code>packages</code> folder and the <code>pubspec.lock</code> files at the root of your project (got_client). Usually, pub gets all the dependencies for us through the Internet.
+			<strong>Note:</strong>If you have some compilation problems, copy the <code>hosted</code> folder found in the <code>resources</code> folder.<br>
+			If you are using Linux or MacOS, copy it to ~/.pub-cache/<br>
+			If you are using Windows, copy it to ~/AppData/Roaming/Pub/Cache/<br>
+			It will place all the required libraries in the Pub cache folder. Just use Pub Get Offline (right click your pubspec.yaml file to see this option) to correct all the errors.
 		</div>
 
 		<h3>Get a closer look at the html and dart files</h3>
@@ -276,7 +279,7 @@ body {
 <div class="filename">got_client.css</div>
 
 		<div class="note">
-			<strong>Note:</strong>Please wait for the instructor to explain the basics about webcomponents. If you're waiting for the other ones, help them or try to play with the concepts we have seen so far: change the counter initial value, make it incremented by 2 instead of one for each click, add another attribute that you increment on hover...
+			<strong>Note:</strong> Please wait for the instructor to explain the basics about webcomponents. If you're waiting for the other ones, help them or try to play with the concepts we have seen so far: change the counter initial value, make it incremented by 2 instead of one for each click, add another attribute that you increment on hover...
 		</div>
 
 		<h2 id="step5">Step 5: Your own component</h2>
@@ -301,19 +304,18 @@ class MyClass {
 </pre>
 <div class="filename">characters.dart</div>
 		<p>Notice the syntaxic sugar in the constructor : the myAttribute is affected the value of the parameter.</p>
-		<p>Our Character class will have the same attributes as our JSON file : a name (String), an actor (String), a bio (String), an img (String), a gender (String) and a list of houses (List&lt;String&gt;)</p>
+		<p>Our Character class will have the same attributes as our JSON file : an id (int), a name (String), an actor (String), a bio (String), an img (String), a gender (String) and a list of houses (List&lt;String&gt;)</p>
 		<p>Add a constructor with all these attributes values as parameters.</p>
 
 		<h3>Iterating over characters</h3>
-		<p>Add an observable characters attribute in your dart file. Name it <code>characters</code>. It will contain a list of characters. Initialize it with at least two characters you create. Fill the list in your constructor.</p>
+		<p>Add an observable characters attribute in your dart file. Name it <code>characters</code>. It will contain a list of characters. Initialize it with at least two characters you create.</p>
 <pre class="prettyprint lang-dart">
 @CustomTag('got-characters')
 class Characters extends PolymerElement {
-  @observable List<Character> characters = [];
+  // Your list initialization here
+  @observable List<Character> characters = [new Character(...), new Character(...)];
 
   Characters.created() : super.created() {
-  	// Your list initialization here
-  	// you can use List.add method
   }
 }
 </pre>
@@ -407,7 +409,7 @@ int dataId = int.parse(target.dataset["id"]);
 </pre>
 		<p>Hacks :</p>
 		<ul>
-			<li>We use a <code>hack</code> attribute in our dart file to switch from class ".detail1" to ".detail2" each time a new character is selected. This will trigger an animation on the detail part. Add the corresponding code in your dart file (both in the characterSelect method and as an attribute).</li>
+			<li>We use a <code>hack</code> attribute in our dart file to switch from class ".detail1" to ".detail2" each time a new character is selected. To do that, we will anotate a method with @ObserveProperty('selected'). It will be called once the value of selected changes. In this method, switch the value of the hack attribute from detail1 to detail2 and detail2 to detail1 alternatively.</li>
 			<li>The style part seems odd. It's because we will use hacky absolute positionning for the detail block. We want it to take 100% width just below the selected character.</li>
 			<li>Notice the pipe in this code, it will call the method on the right with the part on the left as a parameter. I give you the content of this method because it is weird : we calculate the position of the detail block given the fact that each line is 283px height and calculating the row in which the selected character is.</li>
 		</ul>
