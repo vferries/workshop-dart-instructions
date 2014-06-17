@@ -123,7 +123,7 @@ main() {
   ...
         request.response.headers..set(HttpHeaders.CONTENT_TYPE, 'application/json')
                                 ..set('Access-Control-Allow-Origin','*');
-        request.response..write(fileContent);
+        request.response..write(fileContent)
                         ..close();
   ...
 }
