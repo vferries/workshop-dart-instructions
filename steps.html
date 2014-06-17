@@ -34,11 +34,11 @@
 		<h2 id="step0">Step 0: Set up</h2>
 		<p>In this step, you will install, both Dart Editor, the SDK and everytools needed.</p>
 		
-		<h3>Prerequisite : JDK</h3>
-		<p>Dart Editor requires Java version 6 or higher. Please, fill free to use theses provided on the USB keys if you don't already have it installed.<br>Use a version compatible with your Operating System (32 or 64 bits). If you still have problems, go to <a href="https://www.dartlang.org/tools/editor/troubleshoot.html">this troubleshoot guide</a> or simply ask for help.</p>
+		<h3>Prerequisite : JDK/JRE</h3>
+		<p>Dart Editor requires Java version 6 or higher. I've included the JRE7u60 in the editor zip. Please, fill free to use your own but please use a version compatible with your Operating System (32 or 64 bits). If you still have problems, go to <a href="https://www.dartlang.org/tools/editor/troubleshoot.html">this troubleshoot guide</a> or simply ask for help.</p>
 		
 		<h3>Get Dart</h3>
-		<p>Just copy the folder corresponding to your Operating System somewhere on your hard drive. Please, use a version (32/64 bits) matching the version of your installed JDK.</p>
+		<p>Just copy and unzip the folder corresponding to your Operating System somewhere on your hard drive. Please, use a version (32/64 bits) matching the version of your installed JDK or JRE.</p>
 		
 		<h3>Start the editor</h3>
 		<p>Go to the dart directory and double-click DartEditor.</p>
@@ -48,8 +48,7 @@
 		
 		<h3>Create a new command-line project</h3>
 		<p>In the top menu, go to <strong>File -> New Project...</strong><br>
-		Name it as you want : got-server will be a good one<br>
-		Check "Generate sample content"<br>
+		Name it as you want : got_server will be a good name<br>
 		Choose <strong>"Command-line application"</strong> from the list</p>
 		<h3>Have a look at the different folders</h3>
 		<div class="row">
@@ -67,18 +66,8 @@
 			</div>
 		</div>
 		
-		<div class="note">
-			<strong>Note:</strong>If you have some red X's, I bet it's a connection problem. Please, copy the repository found on the USB keys and directly link to it for each of your dependencies in your <code>pubspec.yaml</code> file: 
-			<pre class="prettyprint lang-yaml" filename="test">
-dependencies:
-	my_dependency:
-		path: /path/to/the/folder/my_dependency
-			</pre>
-			<div class="filename">pubspec.yaml</div>
-		</div>
-
 		<h3>Choose the String that will be printed</h3>
-		<p>Simply choose what will be printed. Don't be affraid and try String interpolation while generating your message.</p>
+		<p>Simply choose what will be printed. Don't be afraid and try String interpolation while generating your message.</p>
 
 		<h3>Execute your application</h3>
 		<p>Right click on your dart file and select Run. You can also use the Ctrl + R shortcut.</p>
@@ -95,7 +84,7 @@ main() {
 <code class="nocode note">2</code>  HttpServer.bind('localhost', 8080).then((HttpServer server) {
 <code class="nocode note">3</code>    print('Server started on port ${server.port}');
 <code class="nocode note">4</code>    server.listen((HttpRequest request) {
-          request.response..write('Hello EclipseCon!');
+          request.response..write('Hello EclipseCon!')
           	                ..close();
     });
   });
@@ -110,12 +99,19 @@ main() {
 		<h3>Execute and test it</h3>
 		<p>Run your dart file again, it should print that your webserver started.</p>
 		<p>If it's the case simply head to <a href="http://localhost:8080">http://localhost:8080</a> with your favorite web browser.</p>
+		<p>You can use dartium, located in the folder chromium in your editor folder.</p>
+		<div class="note">
+			<strong>Note:</strong>If you're under Linux 64 bits and have the following message : <code>error while loading shared libraries: libudev.so.0: cannot open shared object file: No such file or directory</code> don't panic, just create the following symbolic link.
+			<pre class="prettyprint lang-bash" filename="test">
+sudo ln -sf /lib/x86_64-linux-gnu/libudev.so.1 /lib/x86_64-linux-gnu/libudev.so.0
+			</pre>
+		</div>		
 		<p>It should print your message, isn't it?</p>
 
 		<h2 id="step3">Step 3: Serving real content</h2>
-		<p>Fine, we are able to print a String from our webserver and see it in our web browser. We will now serve usefull data instead of a simple message. In our case, a JSON (Javascript Serialization Object Notation).</p>
+		<p>Fine, we are able to print a String from our webserver and see it in our web browser. We will now serve usefull data instead of a simple message. In our case, a JSON file (Javascript Serialization Object Notation).</p>
 		<h3>Source file</h3>
-		<p>Start by copying the file <code>characters.json</code> in the <code>bin</code> folder of your project.</p>
+		<p>Start by copying the file <code>characters.json</code> from the resources folder in the <code>bin</code> folder of your project.</p>
 		<h3>Reading our file</h3>
 		<p>We will simply put the file content in our response for now. We will improve this part much later.</p>
 <pre class="prettyprint lang-dart">
@@ -125,13 +121,15 @@ main() {
   File jsonFile = new File("characters.json");
   String fileContent = jsonFile.readAsStringSync();
   ...
+        request.response.headers..set(HttpHeaders.CONTENT_TYPE, 'application/json')
+                                ..set('Access-Control-Allow-Origin','*');
         request.response..write(fileContent);
                         ..close();
   ...
 }
 </pre>
 <div class="filename">got_server.dart</div>
-		
+		<p>Here, we added some HTTP headers on our response. They will be needed for our client part calls because both our client and our server will run on different ports (8080 and 3030). To prevent Cross Site Scripting (XSS), Chrome disables such calls by default.</p>
 		<div class="note">
 			<strong>Note:</strong> Here we use the <code>readAsStringSync()</code> method which is a synchronous method to be sure the file has been completely read before starting the webserver. Another way to do would have been to use the <code>readAsString()</code> method which returns a Future and process with the server launch in the handler method.
 		</div>
@@ -139,6 +137,8 @@ main() {
 		<h3>Rince, repeat...</h3>
 		<p>Simply stop and run your webserver again, you should be used to it as it's the third time.</p>
 		<p>Check in your web browser that the file content is printed.</p>
+
+		<br>
 
 		<h2 id="step0">Step 4: Our first web page with web components</h2>
 		<h3>Create a new wep application</h3>
@@ -149,13 +149,19 @@ main() {
 			<div class="col6">
 				<p><strong>Side notes</strong></p>
 				<ul>
-					<li><p>Use the menu : File -> New Project...<br>This time, choose "Web application (using Polymer library)" as shown on the image.</p></li>
+					<li><p>Use the menu : File -> New Project...<br>This time, choose "Sample web application (using the polymer library)" as shown on the image.</p></li>
+					<li><p>You can name it got_client.</p></li>
 					<li><p>Notice that this time, in our <code>pubspec.yaml</code> file, a polymer dependency has been added for us.</p></li>
 					<li><p>The project now have a <code>web</code> folder that contains html, css and dart files. This one will be exposed when running.</p></li>
 					<li><p>A <code>build.dart</code> file is present at the root of the project and is related to the Dart Editor. It describes how to build our project. It isn't part of this workshop scope.</p></li>
 				</ul>
 			</div>
 		</div>
+
+		<div class="note">
+			<strong>Note:</strong>If you have some red X's, I bet it's a connection problem. Please, copy both the <code>packages</code> folder and the <code>pubspec.lock</code> files at the root of your project (got_client). Usually, pub gets all the dependencies for us through the Internet.
+		</div>
+
 		<h3>Get a closer look at the html and dart files</h3>
 <pre class="prettyprint lang-html">
 &lt;!DOCTYPE html&gt;
@@ -166,23 +172,25 @@ main() {
     &lt;title&gt;Sample app&lt;/title&gt;
     &lt;link rel="stylesheet" href="got_client.css"&gt;
 <code class="nocode note">1</code> &lt;link rel="import" href="clickcounter.html"&gt;
-<code class="nocode note">2</code> &lt;script type="application/dart"&gt;export 'package:polymer/init.dart';&lt;/script&gt;
-<code class="nocode note">3</code> &lt;script src="packages/browser/dart.js"&gt;&lt;/script&gt;
+<code class="nocode note">2</code> <code class="nocode highlight">&lt;link rel="import" href="packages/polymer/polymer.html"&gt;</code>
+<code class="nocode note">3</code> &lt;script type="application/dart"&gt;export 'package:polymer/init.dart';&lt;/script&gt;
+<code class="nocode note">4</code> &lt;script src="packages/browser/dart.js"&gt;&lt;/script&gt;
   &lt;/head&gt;
   &lt;body&gt;
     &lt;h1&gt;Got&gt;client&lt;/h1&gt;
     &lt;p&gt;Hello world from Dart!&lt;/p&gt;
     &lt;div id="sample_container_id"&gt;
-<code class="nocode note">4</code>   &lt;click-counter count="5"&gt;&lt;/click-counter&gt;
+<code class="nocode note">5</code>   &lt;click-counter count="5"&gt;&lt;/click-counter&gt;
     &lt;/div&gt;
   &lt;/body&gt;
 &lt;/html&gt;
 </pre>
 <div class="filename">got_client.html</div>
 		<p><span class="code-note">1</span> This is an Html import. A webcomponent is described in this page (containing his own style etc) and we need to import it if we want to use it.</p>
-		<p><span class="code-note">2</span> Here, we initialize Polymer Dart. We simply expose (and automatically call) the <code>main</code> method contained in the <code>init.dart</code> file in the polymer package. This will bootstrap Polymer and make it usable. You can Ctrl + clic it if you're curious.</p>
-		<p><span class="code-note">3</span> This line allows our application to work even if there aren't any Dart VM in our web browser. The code will be compiled in JavaScript if it's the case. Beware, it's slower than generating the application as Javascript first with dart2js.</p>
-		<p><span class="code-note">4</span> Here, we call the webcomponent called <code>click-counter</code>, initializing it's count attribute to 5.</p>
+		<p><span class="code-note">2</span> BEWARE: SINCE POLYMER VERSION 0.10.0, WE NEED TO ADD THIS LINE OF CODE, WHICH ISN'T INCLUDED IN THE SAMPLE APPLICATION.</p>
+		<p><span class="code-note">3</span> Here, we initialize Polymer Dart. We simply expose (and automatically call) the <code>main</code> method contained in the <code>init.dart</code> file in the polymer package. This will bootstrap Polymer and make it usable. You can Ctrl + clic it if you're curious.</p>
+		<p><span class="code-note">4</span> This line allows our application to work even if there aren't any Dart VM in our web browser. The code will be compiled in JavaScript if it's the case. Beware, it's slower than generating the application as Javascript first with dart2js.</p>
+		<p><span class="code-note">5</span> Here, we call the webcomponent called <code>click-counter</code>, initializing it's count attribute to 5.</p>
 <br>
 <pre class="prettyprint lang-html">
 <code class="nocode note">1</code> &lt;polymer-element name="click-counter" attributes="count"&gt;
@@ -248,14 +256,27 @@ main() {
 			<div class="col6">
 				<p><strong>Your options</strong></p>
 				<ul>
-					<li><p>You could run it as JavaScript. In such a case, dart2js will be called and process your pages, producing obfuscated and minified JavaScript code. It's not our best option here because the page would not be automatically refreshed if we make some changes. This option is good only if you want to test the final result as JavaScript (because no current browser contains a Dart Virtual Machine).</p></li>
-					<li><p>You can also run it in Dartium as Dart code. It's faster and you juste need to refresh your pages to see the changes made to your pages or script (juste like when you code in JavaScript).</p></li>
+					<li><p>You could run it as JavaScript. In such a case, dart2js will be called and process your pages, producing obfuscated and minified JavaScript code. It's not our best option here because the page would not be automatically refreshed if we made some changes. This option is good only if you want to test the final result as JavaScript (because no current browser contains a Dart Virtual Machine).</p></li>
+					<li><p>You can also run it in Dartium as Dart code. It's faster and you just need to refresh your pages to see the changes made to your pages or scripts (juste like when you code in JavaScript).</p></li>
 				</ul>
 			</div>
 		</div>
 		
+		<p>Once it's done, change the background color of the whole page in the got_client.css file:</p>
+<pre class="prettyprint lang-css">
+body {
+  background-color: #1a1a1a;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.2em;
+  margin: 0;
+}
+</pre>
+<div class="filename">got_client.css</div>
+
 		<div class="note">
-			<strong>Note:</strong>If you're waiting for the other ones, try to play with the concepts we have seen so far : change the counter initial value, make it incremented by 2 instead of one for each click, add another attribute that you increment on hover...
+			<strong>Note:</strong>Please wait for the instructor to explain the basics about webcomponents. If you're waiting for the other ones, help them or try to play with the concepts we have seen so far: change the counter initial value, make it incremented by 2 instead of one for each click, add another attribute that you increment on hover...
 		</div>
 
 		<h2 id="step5">Step 5: Your own component</h2>
@@ -297,7 +318,8 @@ class Characters extends PolymerElement {
 }
 </pre>
 <div class="filename">characters.dart</div>
-		<p>First of all, replace your css (style) block by the following inclusion. I prepared some basic styles for you just <a href="">HERE</a>. Copy it in the folder you are working on.</p>
+		<p>First of all, replace your css (style) block by the following inclusion. I prepared some basic styles for you in the file <code>characters.css</code>. Copy it in the folder you are working on.</p>
+		<p>You can also copy the images folder inside your web folder.</p>
 		<p>Beware, the script markup must be INSIDE the template one. Everything outside the template markup in a webcomponent will simply be discarded. You cannot use if or repeat on the parent template markup in your web component.</p>
 <pre class="prettyprint lang-html">
 &lt;link rel="stylesheet" href="characters.css"&gt;
